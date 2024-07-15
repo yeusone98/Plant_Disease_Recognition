@@ -1,7 +1,6 @@
 import streamlit as st
 import tensorflow as tf
 import numpy as np
-from streamlit.web.cli import main
 
 # TensorFlow Model Prediction
 def model_prediction(test_image):
@@ -18,16 +17,37 @@ st.markdown("""
     body {
         font-family: 'Arial', sans-serif;
     }
-    .sidebar .sidebar-content {
-        background-image: linear-gradient(#2e7bcf, #2e7bcf);
-        color: white;
+    nav {
+        background-color: #2e7bcf;
+        padding: 10px 0;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
     }
-    .sidebar .sidebar-content a {
+    .nav-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 20px;
+    }
+    #nav-mobile {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
+    .nav-link {
         color: white;
         text-decoration: none;
+        padding: 10px 15px;
+        transition: background-color 0.3s;
     }
-    .sidebar .sidebar-content a:hover {
-        text-decoration: underline;
+    .nav-link:hover {
+        background-color: #3e8bd0;
+    }
+    .main-content {
+        padding-top: 60px;
     }
     .stButton>button {
         color: #fff;
@@ -72,21 +92,27 @@ st.markdown("""
         color: white;
     }
     </style>
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const footer = document.createElement("div");
-        footer.classList.add("footer");
-        footer.innerHTML = "<p>&copy; 2024 Plant Disease Recognition System. All rights reserved.</p>";
-        document.body.appendChild(footer);
-    });
-    </script>
 """, unsafe_allow_html=True)
 
-# Sidebar
-st.sidebar.title("Dashboard")
-app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"])
+# Horizontal menu
+st.markdown("""
+    <nav>
+        <div class="nav-wrapper">
+            <ul id="nav-mobile" class="right">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/About" class="nav-link">About</a></li>
+                <li><a href="/Disease_Recognition" class="nav-link">Disease Recognition</a></li>
+            </ul>
+        </div>
+    </nav>
+""", unsafe_allow_html=True)
 
-# Main Page
+# Get current page from URL
+app_mode = st.experimental_get_query_params().get("page", ["Home"])[0]
+
+# Main content
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
+
 if app_mode == "Home":
     st.title("🌱 Plant Disease Recognition System 🌿")
     st.image("image-20-edited.jpg", use_column_width=True, caption="Healthy Plant")
@@ -105,13 +131,12 @@ if app_mode == "Home":
     - **Fast and Efficient:** Receive results in seconds, enabling quick decision-making.
 
     ### Get Started
-    Click on the **Disease Recognition** page in the sidebar to upload an image and experience the power of our Plant Disease Recognition System!
+    Click on the **Disease Recognition** page in the menu to upload an image and experience the power of our Plant Disease Recognition System!
 
     ### About Us
     Learn more about the project, our team, and our goals on the **About** page.
     """)
 
-# About Project
 elif app_mode == "About":
     st.title("About the Project")
     st.write("""
@@ -125,8 +150,7 @@ elif app_mode == "About":
     - **Validation:** 17,572 images
     """)
 
-# Prediction Page
-elif app_mode == "Disease Recognition":
+elif app_mode == "Disease_Recognition":
     st.title("Disease Recognition")
     test_image = st.file_uploader("Upload an Image:", type=["jpg", "png", "jpeg"])
     if test_image:
@@ -152,3 +176,27 @@ elif app_mode == "Disease Recognition":
                     'Tomato___healthy'
                 ]
                 st.success(f"Model predicts: {class_names[result_index]}")
+
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Footer
+st.markdown("""
+    <div class="footer">
+        <p>&copy; 2024 Plant Disease Recognition System. All rights reserved.</p>
+    </div>
+""", unsafe_allow_html=True)
+
+# JavaScript for handling page navigation
+st.markdown("""
+    <script>
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = link.getAttribute('href').replace('/', '');
+            window.history.pushState({}, '', `?page=${page}`);
+            window.location.reload();
+        });
+    });
+    </script>
+""", unsafe_allow_html=True)
