@@ -73,13 +73,14 @@ st.markdown("""
     }
     .footer {
         text-align: center;
-        padding: 20px;
+        padding: 10px; 
         position: fixed;
         left: 0;
         bottom: 0;
         width: 100%;
         background-color: #2e7bcf;
         color: white;
+        font-size: 12px; 
     }
     </style>
     <script>
@@ -107,7 +108,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Main Page
-if st.checkbox('Home', key='home'):
+def display_home():
     st.markdown('<a id="home"></a>', unsafe_allow_html=True)
     st.title("🌱 Plant Disease Recognition System 🌿")
     st.image("image-20-edited.jpg", use_column_width=True, caption="Healthy Plant")
@@ -132,8 +133,7 @@ if st.checkbox('Home', key='home'):
     Learn more about the project, our team, and our goals on the **About** page.
     """)
 
-# About Project
-if st.checkbox('About', key='about'):
+def display_about():
     st.markdown('<a id="about"></a>', unsafe_allow_html=True)
     st.title("About the Project")
     st.write("""
@@ -147,8 +147,7 @@ if st.checkbox('About', key='about'):
     - **Validation:** 17,572 images
     """)
 
-# Prediction Page
-if st.checkbox('Disease Recognition', key='disease-recognition'):
+def display_disease_recognition():
     st.markdown('<a id="disease-recognition"></a>', unsafe_allow_html=True)
     st.title("Disease Recognition")
     test_image = st.file_uploader("Upload an Image:", type=["jpg", "png", "jpeg"])
@@ -175,3 +174,13 @@ if st.checkbox('Disease Recognition', key='disease-recognition'):
                     'Tomato___healthy'
                 ]
                 st.success(f"Model predicts: {class_names[result_index]}")
+
+# Main Page Content
+if st.checkbox('Home', key='home'):
+    display_home()
+
+if st.checkbox('About', key='about'):
+    display_about()
+
+if st.checkbox('Disease Recognition', key='disease-recognition'):
+    display_disease_recognition()
