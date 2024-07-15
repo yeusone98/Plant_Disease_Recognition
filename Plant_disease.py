@@ -1,6 +1,7 @@
 import streamlit as st
 import tensorflow as tf
 import numpy as np
+from streamlit.web.cli import main
 
 # TensorFlow Model Prediction
 def model_prediction(test_image):
@@ -17,27 +18,16 @@ st.markdown("""
     body {
         font-family: 'Arial', sans-serif;
     }
-    .horizontal-menu {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        background-color: #2e7bcf;
-        padding: 10px;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
+    .sidebar .sidebar-content {
+        background-image: linear-gradient(#2e7bcf, #2e7bcf);
+        color: white;
     }
-    .horizontal-menu a {
+    .sidebar .sidebar-content a {
         color: white;
         text-decoration: none;
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
     }
-    .horizontal-menu a:hover {
-        background-color: #45a049;
+    .sidebar .sidebar-content a:hover {
+        text-decoration: underline;
     }
     .stButton>button {
         color: #fff;
@@ -73,14 +63,13 @@ st.markdown("""
     }
     .footer {
         text-align: center;
-        padding: 10px; 
+        padding: 20px;
         position: fixed;
         left: 0;
         bottom: 0;
         width: 100%;
         background-color: #2e7bcf;
         color: white;
-        font-size: 12px; 
     }
     </style>
     <script>
@@ -93,23 +82,12 @@ st.markdown("""
     </script>
 """, unsafe_allow_html=True)
 
-# Horizontal menu
-st.markdown("""
-    <div class="horizontal-menu">
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#disease-recognition">Disease Recognition</a>
-    </div>
-""", unsafe_allow_html=True)
-
-# Padding to ensure content is not hidden behind the fixed menu
-st.markdown("""
-    <div style="padding-top: 70px;"></div>
-""", unsafe_allow_html=True)
+# Sidebar
+st.sidebar.title("Dashboard")
+app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"])
 
 # Main Page
-def display_home():
-    st.markdown('<a id="home"></a>', unsafe_allow_html=True)
+if app_mode == "Home":
     st.title("🌱 Plant Disease Recognition System 🌿")
     st.image("image-20-edited.jpg", use_column_width=True, caption="Healthy Plant")
     st.write("""
@@ -133,8 +111,8 @@ def display_home():
     Learn more about the project, our team, and our goals on the **About** page.
     """)
 
-def display_about():
-    st.markdown('<a id="about"></a>', unsafe_allow_html=True)
+# About Project
+elif app_mode == "About":
     st.title("About the Project")
     st.write("""
     #### About Dataset
@@ -147,8 +125,8 @@ def display_about():
     - **Validation:** 17,572 images
     """)
 
-def display_disease_recognition():
-    st.markdown('<a id="disease-recognition"></a>', unsafe_allow_html=True)
+# Prediction Page
+elif app_mode == "Disease Recognition":
     st.title("Disease Recognition")
     test_image = st.file_uploader("Upload an Image:", type=["jpg", "png", "jpeg"])
     if test_image:
@@ -174,13 +152,3 @@ def display_disease_recognition():
                     'Tomato___healthy'
                 ]
                 st.success(f"Model predicts: {class_names[result_index]}")
-
-# Main Page Content
-if st.checkbox('Home', key='home'):
-    display_home()
-
-if st.checkbox('About', key='about'):
-    display_about()
-
-if st.checkbox('Disease Recognition', key='disease-recognition'):
-    display_disease_recognition()
