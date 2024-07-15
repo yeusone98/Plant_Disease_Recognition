@@ -1,6 +1,7 @@
 import streamlit as st
 import tensorflow as tf
 import numpy as np
+from streamlit.web.cli import main
 
 # TensorFlow Model Prediction
 def model_prediction(test_image):
