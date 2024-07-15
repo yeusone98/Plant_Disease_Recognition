@@ -1,7 +1,6 @@
 import streamlit as st
 import tensorflow as tf
 import numpy as np
-from streamlit.web.cli import main
 
 # TensorFlow Model Prediction
 def model_prediction(test_image):
@@ -18,37 +17,26 @@ st.markdown("""
     body {
         font-family: 'Arial', sans-serif;
     }
-    nav {
+    .sidebar .sidebar-content {
+        display: none;
+    }
+    .horizontal-menu {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
         background-color: #2e7bcf;
-        padding: 10px 0;
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
+        padding: 10px;
     }
-    .nav-wrapper {
-        display: flex;
-        justify-content: flex-end;
-        padding: 0 20px;
-    }
-    #nav-mobile {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-    }
-    .nav-link {
+    .horizontal-menu a {
         color: white;
         text-decoration: none;
-        padding: 10px 15px;
-        transition: background-color 0.3s;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
     }
-    .nav-link:hover {
-        background-color: #3e8bd0;
-    }
-    .main-content {
-        padding-top: 60px;
+    .horizontal-menu a:hover {
+        background-color: #45a049;
     }
     .stButton>button {
         color: #fff;
@@ -88,33 +76,33 @@ st.markdown("""
         position: fixed;
         left: 0;
         bottom: 0;
-        width: 100%;
+        width: 50%;
         background-color: #2e7bcf;
         color: white;
     }
     </style>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const footer = document.createElement("div");
+        footer.classList.add("footer");
+        footer.innerHTML = "<p>&copy; 2024 Plant Disease Recognition System. All rights reserved.</p>";
+        document.body.appendChild(footer);
+    });
+    </script>
 """, unsafe_allow_html=True)
 
 # Horizontal menu
 st.markdown("""
-    <nav>
-        <div class="nav-wrapper">
-            <ul id="nav-mobile" class="right">
-                <li><a href="/" class="nav-link">Home</a></li>
-                <li><a href="/About" class="nav-link">About</a></li>
-                <li><a href="/Disease_Recognition" class="nav-link">Disease Recognition</a></li>
-            </ul>
-        </div>
-    </nav>
+    <div class="horizontal-menu">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#disease-recognition">Disease Recognition</a>
+    </div>
 """, unsafe_allow_html=True)
 
-# Get current page from URL
-app_mode = st.experimental_get_query_params().get("page", ["Home"])[0]
-
-# Main content
-st.markdown('<div class="main-content">', unsafe_allow_html=True)
-
-if app_mode == "Home":
+# Main Page
+st.markdown('<a id="home"></a>', unsafe_allow_html=True)
+if st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"]) == "Home":
     st.title("🌱 Plant Disease Recognition System 🌿")
     st.image("image-20-edited.jpg", use_column_width=True, caption="Healthy Plant")
     st.write("""
@@ -132,13 +120,15 @@ if app_mode == "Home":
     - **Fast and Efficient:** Receive results in seconds, enabling quick decision-making.
 
     ### Get Started
-    Click on the **Disease Recognition** page in the menu to upload an image and experience the power of our Plant Disease Recognition System!
+    Click on the **Disease Recognition** page in the sidebar to upload an image and experience the power of our Plant Disease Recognition System!
 
     ### About Us
     Learn more about the project, our team, and our goals on the **About** page.
     """)
 
-elif app_mode == "About":
+# About Project
+st.markdown('<a id="about"></a>', unsafe_allow_html=True)
+if st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"]) == "About":
     st.title("About the Project")
     st.write("""
     #### About Dataset
@@ -151,7 +141,9 @@ elif app_mode == "About":
     - **Validation:** 17,572 images
     """)
 
-elif app_mode == "Disease_Recognition":
+# Prediction Page
+st.markdown('<a id="disease-recognition"></a>', unsafe_allow_html=True)
+if st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"]) == "Disease Recognition":
     st.title("Disease Recognition")
     test_image = st.file_uploader("Upload an Image:", type=["jpg", "png", "jpeg"])
     if test_image:
@@ -177,27 +169,3 @@ elif app_mode == "Disease_Recognition":
                     'Tomato___healthy'
                 ]
                 st.success(f"Model predicts: {class_names[result_index]}")
-
-st.markdown('</div>', unsafe_allow_html=True)
-
-# Footer
-st.markdown("""
-    <div class="footer">
-        <p>&copy; 2024 Plant Disease Recognition System. All rights reserved.</p>
-    </div>
-""", unsafe_allow_html=True)
-
-# JavaScript for handling page navigation
-st.markdown("""
-    <script>
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const page = link.getAttribute('href').replace('/', '');
-            window.history.pushState({}, '', `?page=${page}`);
-            window.location.reload();
-        });
-    });
-    </script>
-""", unsafe_allow_html=True)
