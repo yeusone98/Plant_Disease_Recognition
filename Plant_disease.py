@@ -17,15 +17,16 @@ st.markdown("""
     body {
         font-family: 'Arial', sans-serif;
     }
-    .sidebar .sidebar-content {
-        display: none;
-    }
     .horizontal-menu {
         display: flex;
         justify-content: center;
         gap: 10px;
         background-color: #2e7bcf;
         padding: 10px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
     }
     .horizontal-menu a {
         color: white;
@@ -76,7 +77,7 @@ st.markdown("""
         position: fixed;
         left: 0;
         bottom: 0;
-        width: 50%;
+        width: 100%;
         background-color: #2e7bcf;
         color: white;
     }
@@ -100,9 +101,14 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+# Padding to ensure content is not hidden behind the fixed menu
+st.markdown("""
+    <div style="padding-top: 70px;"></div>
+""", unsafe_allow_html=True)
+
 # Main Page
-st.markdown('<a id="home"></a>', unsafe_allow_html=True)
-if st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"]) == "Home":
+if st.checkbox('Home', key='home'):
+    st.markdown('<a id="home"></a>', unsafe_allow_html=True)
     st.title("🌱 Plant Disease Recognition System 🌿")
     st.image("image-20-edited.jpg", use_column_width=True, caption="Healthy Plant")
     st.write("""
@@ -127,8 +133,8 @@ if st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"])
     """)
 
 # About Project
-st.markdown('<a id="about"></a>', unsafe_allow_html=True)
-if st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"]) == "About":
+if st.checkbox('About', key='about'):
+    st.markdown('<a id="about"></a>', unsafe_allow_html=True)
     st.title("About the Project")
     st.write("""
     #### About Dataset
@@ -142,8 +148,8 @@ if st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"])
     """)
 
 # Prediction Page
-st.markdown('<a id="disease-recognition"></a>', unsafe_allow_html=True)
-if st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"]) == "Disease Recognition":
+if st.checkbox('Disease Recognition', key='disease-recognition'):
+    st.markdown('<a id="disease-recognition"></a>', unsafe_allow_html=True)
     st.title("Disease Recognition")
     test_image = st.file_uploader("Upload an Image:", type=["jpg", "png", "jpeg"])
     if test_image:
