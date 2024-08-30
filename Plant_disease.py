@@ -89,7 +89,7 @@ app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recogn
 # Main Page
 if app_mode == "Home":
     st.title("🌱 Plant Disease Recognition System 🌿")
-    st.image("image-20-edited.jpg", use_column_width=True, caption="Healthy Plant")
+    st.image("image-20-edited.jpg", use_column_width=True)
     st.write("""
     ## Welcome!
     Our goal is to help identify plant diseases quickly and accurately. Simply upload an image of a plant, and our system will analyze it to detect any signs of disease. Let's work together to protect our crops and ensure a healthy harvest!
